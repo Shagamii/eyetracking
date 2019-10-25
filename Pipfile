@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+python-dotenv = "*"
+tobii-research = "*"
+
+[requires]
+python_version = "3.5.2"
+
+[scripts]
+prepare = "cp env .env"
+start = "python ./main.py"
