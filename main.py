@@ -1,14 +1,12 @@
 import time
+import json
+import datetime
 
 import tobii_research as tr
 
 from apply_licenses import apply_licenses
-
-def gaze_data_callback(gaze_data):
-    # Print gaze points of left and right eye
-    print("Left eye: ({gaze_left_eye}) \t Right eye: ({gaze_right_eye})".format(
-        gaze_left_eye=gaze_data['left_gaze_point_on_display_area'],
-        gaze_right_eye=gaze_data['right_gaze_point_on_display_area']))
+from storage_gaze_data import exec_storage_to_csv
+from gaze_data_callback import gaze_data_callback
 
 if __name__ == '__main__':
     found_eyetrackers = tr.find_all_eyetrackers()
@@ -18,6 +16,9 @@ if __name__ == '__main__':
     print("Model: " + my_eyetracker.model)
     print("Name (It's OK if this is empty): " + my_eyetracker.device_name)
     print("Serial number: " + my_eyetracker.serial_number)
-    # my_eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
-    # time.sleep(5)
-    # my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
+
+    my_eyetracker.subscribe_to(
+        tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
+    time.sleep(30)
+    my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
+    exec_storage_to_csv()
