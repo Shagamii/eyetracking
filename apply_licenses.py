@@ -3,10 +3,11 @@ from os.path import join, dirname
 import settings
 
 FILE_NAME_OF_LICENSE = settings.FILE_NAME_OF_LICENSE
+FILE_DIRECTORY_OF_LICENSE = ".licenses"
 
 def apply_licenses(eyetracker):
     print("------")
-    license_file_path = join(dirname(__file__),  "./.licenses/" , FILE_NAME_OF_LICENSE)
+    license_file_path = join(dirname(__file__),  FILE_DIRECTORY_OF_LICENSE, FILE_NAME_OF_LICENSE)
     
     # <BeginExample>
     import tobii_research as tr
