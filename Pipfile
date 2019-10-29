@@ -4,10 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+autopep8 = "*"
 
 [packages]
 python-dotenv = "*"
 tobii-research = "*"
+flask = "*"
 
 [requires]
 python_version = "3.5.2"
