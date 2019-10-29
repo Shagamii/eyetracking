@@ -1,24 +1,15 @@
+import sys
 import time
-import json
-import datetime
 
-import tobii_research as tr
+from eyetracking import subscribe_eyetracking
+from utils.get_index import get_index
 
-from apply_licenses import apply_licenses
-from storage_gaze_data import exec_storage_to_csv
-from gaze_data_callback import gaze_data_callback
+def get_second_of_sleep():
+    index_of_second = get_index(sys.argv, '--second')
+    return index_of_second if index_of_second != False else 10
 
 if __name__ == '__main__':
-    found_eyetrackers = tr.find_all_eyetrackers()
-    my_eyetracker = found_eyetrackers[0]
-    apply_licenses(my_eyetracker)
-    print("Address: " + my_eyetracker.address)
-    print("Model: " + my_eyetracker.model)
-    print("Name (It's OK if this is empty): " + my_eyetracker.device_name)
-    print("Serial number: " + my_eyetracker.serial_number)
-
-    my_eyetracker.subscribe_to(
-        tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
-    time.sleep(30)
-    my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
-    exec_storage_to_csv()
+    unsubscribe_eyetracking = subscribe_eyetracking()
+    second_of_sleep = get_second_of_sleep()
+    time.sleep(second_of_sleep)
+    unsubscribe_eyetracking()
