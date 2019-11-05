@@ -50,9 +50,19 @@ def correspond_position_to_area(gaze_data, area_data):
     return list(map(map_data_to_area, gaze_data))
 
 
+# area_data = [
+#     ['sidebar', 0, 0.18, 0, 1],
+#     ['header', 0.18, 1, 0.083, ]
+# ]
+
+list(map(range()))
 if __name__ == '__main__':
     gaze_data = import_csv(
         "20191029-125128-20191029-125139", get_formated_gaze_data)
-    d = correspond_position_to_area(gaze_data, area_data=[[str(
-        i*1000), (i % 2) * .5, ((i % 2) + 1) * .5, (i)/10, (i+1)/10] for i in range(10)])
+    d = correspond_position_to_area(
+        gaze_data,
+        area_data=[
+            [str(i*1000) + 0.04, (i % 2) * .5 + 0.04, ((i % 2) + 1) * .5, (i)/10, (i+1)/10] for i in range(10)
+        ]
+    )
     print(d)

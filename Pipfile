@@ -10,6 +10,7 @@ autopep8 = "*"
 python-dotenv = "*"
 tobii-research = "*"
 flask = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.5.2"

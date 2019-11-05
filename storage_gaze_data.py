@@ -1,4 +1,5 @@
 from datetime import datetime
+from os.path import join
 
 from output_to_csv import output_to_csv
 
@@ -10,7 +11,7 @@ def storatge_gaze_data(
     left_gaze_point_y,
     right_gaze_point_x,
     right_gaze_point_y,
-    _path = "",
+    dirname=""
 ):
 
     gaze_data = {
@@ -22,12 +23,13 @@ def storatge_gaze_data(
     }
     storage.append(gaze_data)
 
-    if len(storage) >= 1000:
-        exec_storage_to_csv(_path=_path)
+    if len(storage) >= 10000:
+        exec_storage_to_csv(dirname=dirname)
 
-def exec_storage_to_csv(_path = ""):
+def exec_storage_to_csv(dirname):
     print(len(storage))
     start_time = datetime.fromtimestamp(storage[0]["time_stamp"]).strftime('%Y%m%d-%H%M%S')
     end_time = datetime.fromtimestamp(storage[-1]["time_stamp"]).strftime('%Y%m%d-%H%M%S')
-    output_to_csv(gaze_data_list=storage, _path = _path if _path != '' else start_time + "-" + end_time)
+    _path = start_time + "-" + end_time
+    output_to_csv(gaze_data_list=storage, _dirname = dirname, _path = _path)
     storage.clear()

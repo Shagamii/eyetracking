@@ -6,9 +6,9 @@ import tobii_research as tr
 
 from apply_licenses import apply_licenses
 from storage_gaze_data import exec_storage_to_csv
-from gaze_data_callback import gaze_data_callback
+from gaze_data_callback import create_gaze_data_callback
 
-def subscribe_eyetracking():
+def subscribe_eyetracking(dirname):
     found_eyetrackers = tr.find_all_eyetrackers()
     my_eyetracker = found_eyetrackers[0]
     apply_licenses(my_eyetracker)
@@ -17,12 +17,13 @@ def subscribe_eyetracking():
     print("Name (It's OK if this is empty): " + my_eyetracker.device_name)
     print("Serial number: " + my_eyetracker.serial_number)
 
+    gaze_data_callback = create_gaze_data_callback(dirname)
     my_eyetracker.subscribe_to(
         tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
     # time.sleep(30)
 
     def unsubscribe_eyetracking():
         my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
-        exec_storage_to_csv()
+        exec_storage_to_csv(dirname)
     
     return unsubscribe_eyetracking
