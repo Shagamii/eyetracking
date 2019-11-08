@@ -1,10 +1,14 @@
 import json
+from time import time
 
 from flask import Flask, request, jsonify, render_template, make_response
 from flask_cors import CORS
 
 from eyetracking import subscribe_eyetracking
-from exec_clang import exec_clang
+from exec_clang import exec_clang as _exec_clang
+from storage_layout import storage_layout as _storage_layout
+from storage_code import storage_code
+from get_c_program import get_c_program
 
 app = Flask(__name__, static_folder="./dist/assets", template_folder="./dist")
 CORS(app)
@@ -27,6 +31,7 @@ def eyetracking():
             if username == tracking_username:
                 return make_response(jsonify({'error': 'Can not track eye with multiple people'}), 500)
             tracking_username = username
+            print(username)
             unsubscriber_of_eyetracking = subscribe_eyetracking(username)
             return jsonify({"status": "start"})
         elif status == "end":
@@ -43,9 +48,30 @@ def exec_clang():
     if request.method == "POST":
         payload = request.json
         code = payload.get("code")
-        result = exec_clang(code)
+        username = payload.get("username")
+        order_of_program = payload.get("order_of_program")
+        result = _exec_clang(code)
+        storage_code(code=code, username=username,
+                     order_of_program=order_of_program, timestamp=str(time()))
         return jsonify({"result": result})
 
+@app.route("/api/storage_layout", methods=['POST'])
+def storage_layout():
+    if request.method == "POST":
+        payload = request.json
+        layout = payload.get("layout")
+        username = payload.get("username")
+        _storage_layout(layout=layout, _path=username)
+        return jsonify({ "result": "success" })
+
+@app.route("/api/get_program", methods=["POST"])
+def get_program():
+    if request.method == "POST":
+        payload = request.json
+        order_of_program = payload.get("order_of_program")
+        c_program_str = get_c_program(order_of_program=order_of_program)
+        return jsonify({ "program": c_program_str })
+ 
 
 @app.errorhandler(404)
 def not_found(error):

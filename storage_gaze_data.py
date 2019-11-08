@@ -11,7 +11,7 @@ def storatge_gaze_data(
     left_gaze_point_y,
     right_gaze_point_x,
     right_gaze_point_y,
-    dirname=""
+    dirname
 ):
 
     gaze_data = {
