@@ -15,6 +15,9 @@ def output_to_csv(gaze_data_list, _dirname, _path):
     if not exists(csv_dir):
         mkdir(csv_dir)
     csv_path = join(csv_dir,  _path + ".csv")
-    with open(csv_path, 'w', newline="") as f:
-        writer = csv.DictWriter(f, CSV_HEADER)
-        writer.writerows(gaze_data_list)
+    try:
+        with open(csv_path, 'w', newline="") as f:
+            writer = csv.DictWriter(f, CSV_HEADER)
+            writer.writerows(gaze_data_list)
+    except FileExistsError:
+        print(gaze_data_list)

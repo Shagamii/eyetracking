@@ -9,6 +9,7 @@ from exec_clang import exec_clang as _exec_clang
 from storage_layout import storage_layout as _storage_layout
 from storage_code import storage_code
 from get_c_program import get_c_program
+from get_c_question import get_c_question
 
 app = Flask(__name__, static_folder="./dist/assets", template_folder="./dist")
 CORS(app)
@@ -64,13 +65,14 @@ def storage_layout():
         _storage_layout(layout=layout, _path=username)
         return jsonify({ "result": "success" })
 
-@app.route("/api/get_program", methods=["POST"])
-def get_program():
+@app.route("/api/get_quiz", methods=["POST"])
+def get_quiz():
     if request.method == "POST":
         payload = request.json
-        order_of_program = payload.get("order_of_program")
-        c_program_str = get_c_program(order_of_program=order_of_program)
-        return jsonify({ "program": c_program_str })
+        order_of_quiz = payload.get("order_of_quiz")
+        c_program = get_c_program(order_of_assets=order_of_quiz)
+        c_question = get_c_question(order_of_assets=order_of_quiz)
+        return jsonify({ "program": c_program, "question": c_question })
  
 
 @app.errorhandler(404)
