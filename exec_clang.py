@@ -1,5 +1,6 @@
 import subprocess
 from os.path import join
+import time
 
 def exec_clang(source):
     exec_file_name = "exec_file_name"
@@ -14,18 +15,28 @@ def exec_clang(source):
     if (process_of_compile.returncode == 1):
         return process_of_compile.stderr.decode("shiftjis")
     exec_cmd = ".\\" + exec_file_name + ".exe"
-    process_of_exec_file = subprocess.run(
-        [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True, timeout=3)
-    if (process_of_exec_file.returncode == 1):
-        return process_of_exec_file.stderr.decode("shiftjis")
-    return process_of_exec_file.stdout.decode("shiftjis")
-    # proc = subprocess.Popen(
-    #     [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True)
-    # try:
-    #     process_of_exec_file = proc.communicate(timeout=3)
-    #     print(process_of_compile)
-    # except subprocess.TimeoutExpired:
-    #     proc.kill()
-    # if (proc.returncode == 1):
-    #     return proc.stderr.decode("shiftjis")
-    # return proc.stdout.read().decode("shift
+    proc_of_exec_file = subprocess.Popen(
+        [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True)
+
+    try:
+        stdout_of_exec_file, stderr_of_exec_file = proc_of_exec_file.communicate(timeout=1)
+        proc_of_exec_file.kill()
+        if proc_of_exec_file.returncode == 1:
+            return stderr_of_exec_file.decode("shiftjis")
+        return stdout_of_exec_file.decode("shiftjis")
+    except subprocess.TimeoutExpired:
+        proc_of_exec_file.kill()
+        retry_proc_of_exec_file = subprocess.Popen(
+            [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True)
+        # print(proc_of_exec_file.stdout.read())
+        result_of_exec_file = []
+        while retry_proc_of_exec_file.poll() is None:
+            output = retry_proc_of_exec_file.stdout.readline()
+            if (output != b''):
+                result_of_exec_file.append(output.decode("shiftjis"))
+            if len(result_of_exec_file) > 100:
+                result_of_exec_file.append("出力結果が多すぎます\n")
+                break
+        retry_proc_of_exec_file.kill()
+        retry_proc_of_exec_file.terminate()
+        return ''.join(result_of_exec_file)
