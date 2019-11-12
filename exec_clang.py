@@ -2,6 +2,9 @@ import subprocess
 from os.path import join
 import time
 
+def kill_survived_process(process_name):
+    subprocess.call(['taskkill', '/im', process_name, '/F'])
+
 def exec_clang(source):
     exec_file_name = "exec_file_name"
     c_file_name = exec_file_name + ".c"
@@ -9,15 +12,19 @@ def exec_clang(source):
 
     with open(join("..", exec_dirname, c_file_name), 'w') as f:
         f.write(source)
+    
+    kill_survived_process(process_name=exec_file_name + ".exe")
 
-    process_of_compile = subprocess.run(["gcc", "-o", exec_file_name, c_file_name],
+    process_of_compile = subprocess.Popen(["gcc", "-o", exec_file_name, c_file_name],
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True)
+    result_of_compile, error_of_compile = process_of_compile.communicate()
     if (process_of_compile.returncode == 1):
-        return process_of_compile.stderr.decode("shiftjis")
+        process_of_compile.kill()
+        return error_of_compile.decode("shiftjis")
+    process_of_compile.kill()
     exec_cmd = ".\\" + exec_file_name + ".exe"
     proc_of_exec_file = subprocess.Popen(
-        [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True)
-
+        [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True,)
     try:
         stdout_of_exec_file, stderr_of_exec_file = proc_of_exec_file.communicate(timeout=1)
         proc_of_exec_file.kill()
@@ -27,9 +34,10 @@ def exec_clang(source):
     except subprocess.TimeoutExpired:
         proc_of_exec_file.kill()
         retry_proc_of_exec_file = subprocess.Popen(
-            [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True)
-        # print(proc_of_exec_file.stdout.read())
+            [exec_cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=join("..", exec_dirname), shell=True,
+        )
         result_of_exec_file = []
+        start_time = time.time()
         while retry_proc_of_exec_file.poll() is None:
             output = retry_proc_of_exec_file.stdout.readline()
             if (output != b''):
@@ -37,6 +45,10 @@ def exec_clang(source):
             if len(result_of_exec_file) > 100:
                 result_of_exec_file.append("出力結果が多すぎます\n")
                 break
-        retry_proc_of_exec_file.kill()
-        retry_proc_of_exec_file.terminate()
+            now = time.time()
+            if int(now - start_time) > 2:
+                result_of_exec_file.append("タイムアウトしました\n")
+                break
+        
+        kill_survived_process(process_name=exec_file_name + ".exe")
         return ''.join(result_of_exec_file)
