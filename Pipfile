@@ -11,6 +11,7 @@ python-dotenv = "*"
 tobii-research = "*"
 flask = "*"
 flask-cors = "*"
+timeout-decorator = "*"
 
 [requires]
 python_version = "3.5.2"

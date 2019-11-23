@@ -7,7 +7,7 @@ from flask_cors import CORS
 from eyetracking import subscribe_eyetracking
 from exec_clang import exec_clang as _exec_clang
 from storage_layout import storage_layout as _storage_layout
-from storage_code import storage_code
+from storage_code import storage_code as _storage_code
 from get_c_program import get_c_program
 from get_c_question import get_c_question
 
@@ -52,7 +52,7 @@ def exec_clang():
         username = payload.get("username")
         order_of_program = payload.get("order_of_program")
         result = _exec_clang(code)
-        storage_code(code=code, username=username,
+        _storage_code(code=code, username=username,
                      order_of_program=order_of_program, timestamp=str(time()))
         return jsonify({"result": result})
 
@@ -73,6 +73,20 @@ def get_quiz():
         c_program = get_c_program(order_of_assets=order_of_quiz)
         c_question = get_c_question(order_of_assets=order_of_quiz)
         return jsonify({ "program": c_program, "question": c_question })
+    
+@app.route("/api/storage_code", methods=['POST'])
+def storage_code():
+    if request.method == "POST":
+        try:
+            payload = request.json
+            code = payload.get("code")
+            username = payload.get("username")
+            order_of_program = payload.get("order_of_program")
+            _storage_code(code=code, username=username,
+                        order_of_program=order_of_program, timestamp=str(time()))
+            return jsonify({ "status": "success" })
+        except:
+            return jsonify({ "status": "failure" })
  
 
 @app.errorhandler(404)

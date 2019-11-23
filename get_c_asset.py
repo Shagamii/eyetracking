@@ -1,9 +1,17 @@
 from os.path import join, dirname
 
 PROGRAM_FILE_NAMES = [
-    "runtime_error",
+    "assignment",
+    "pointer",
+    "pointer2",
+    "pointer3",
+    "pointer4",
+    "recursive",
+    "type_of_variable",
     "compile_error",
+    "runtime_error",
     "result_error",
+    "control"
 ]
 
 def get_c_asset(order_of_asset, asset_dirname, extension=".c"):
