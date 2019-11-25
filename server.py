@@ -5,9 +5,11 @@ from flask import Flask, request, jsonify, render_template, make_response
 from flask_cors import CORS
 
 from eyetracking import subscribe_eyetracking
+from gaze_data_callback import set_extra_dirname_saved_csv
 from exec_clang import exec_clang as _exec_clang
 from storage_layout import storage_layout as _storage_layout
 from storage_code import storage_code as _storage_code
+from get_c_asset import get_program_file_name_from_order
 from get_c_program import get_c_program
 from get_c_question import get_c_question
 
@@ -72,6 +74,8 @@ def get_quiz():
         order_of_quiz = payload.get("order_of_quiz")
         c_program = get_c_program(order_of_assets=order_of_quiz)
         c_question = get_c_question(order_of_assets=order_of_quiz)
+        program_file_name = get_program_file_name_from_order(order_of_asset=order_of_quiz)
+        set_extra_dirname_saved_csv(dirname=program_file_name)
         return jsonify({ "program": c_program, "question": c_question })
     
 @app.route("/api/storage_code", methods=['POST'])

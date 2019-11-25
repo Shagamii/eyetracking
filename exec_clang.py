@@ -15,7 +15,8 @@ def exec_clang(source):
     c_file_name = exec_file_name + ".c"
     exec_dirname = "clang_sandbox"
 
-    with open(join("..", exec_dirname, c_file_name), 'w') as f:
+    with open(join("..", exec_dirname, c_file_name), 'w', newline="\n") as f:
+        print(source)
         f.write(source)
     
     kill_survived_process(process_name=exec_file_name + ".exe")
@@ -36,7 +37,7 @@ def exec_clang(source):
         if proc_of_exec_file.returncode == 1:
             if (stderr_of_exec_file != b''):
                 return stderr_of_exec_file.decode("shiftjis")
-            return ''
+            return 'segmentation fault'
         return stdout_of_exec_file.decode("shiftjis")
     except subprocess.TimeoutExpired:
         proc_of_exec_file.kill()

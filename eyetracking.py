@@ -1,14 +1,16 @@
 import time
 import json
 import datetime
+from os.path import join
 
 import tobii_research as tr
 
 from apply_licenses import apply_licenses
 from storage_gaze_data import exec_storage_to_csv
-from gaze_data_callback import create_gaze_data_callback
+from gaze_data_callback import create_gaze_data_callback, get_extra_dirname_saved_csv
 
 def subscribe_eyetracking(dirname):
+
     found_eyetrackers = tr.find_all_eyetrackers()
     my_eyetracker = found_eyetrackers[0]
     apply_licenses(my_eyetracker)
@@ -20,10 +22,11 @@ def subscribe_eyetracking(dirname):
     gaze_data_callback = create_gaze_data_callback(dirname)
     my_eyetracker.subscribe_to(
         tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
-    # time.sleep(30)
 
     def unsubscribe_eyetracking():
+        extra_dirname_saved_csv = get_extra_dirname_saved_csv()[0]
+        _dirname = join(dirname , extra_dirname_saved_csv) if extra_dirname_saved_csv != None else dirname
         my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
-        exec_storage_to_csv(dirname)
+        exec_storage_to_csv(_dirname)
     
     return unsubscribe_eyetracking
