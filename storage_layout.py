@@ -25,7 +25,6 @@ def storage_layout(layout, _path):
     if not exists(csv_dir):
         makedirs(csv_dir)
     csv_path = join(csv_dir, _path + ".csv")
-    print(layout)
     with open(csv_path, 'w', newline="") as f:
         writer = csv.DictWriter(f, HEADER_OF_LAYOUT)
         writer.writeheader()

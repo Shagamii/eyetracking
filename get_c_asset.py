@@ -14,7 +14,6 @@ PROGRAM_FILE_NAMES = [
 ]
 
 def get_program_file_name_from_order (order_of_asset):
-    print(order_of_asset)
     index_of_program = order_of_asset - 1
     if len(PROGRAM_FILE_NAMES) < order_of_asset:
          return None

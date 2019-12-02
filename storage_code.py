@@ -6,7 +6,6 @@ from get_c_asset import get_program_file_name_from_order
 
 def storage_code(code, username, order_of_program, timestamp = str(time())):
     program_file_name = get_program_file_name_from_order(order_of_asset=order_of_program)
-    print(code)
     if program_file_name == None:
         return ''
     code_dir = join(dirname(__file__), "..", "data", "codes", username, program_file_name)

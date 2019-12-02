@@ -34,7 +34,6 @@ def eyetracking():
             if username == tracking_username:
                 return make_response(jsonify({'error': 'Can not track eye with multiple people'}), 500)
             tracking_username = username
-            print(username)
             unsubscriber_of_eyetracking = subscribe_eyetracking(username)
             return jsonify({"status": "start"})
         elif status == "end":
@@ -54,6 +53,7 @@ def exec_clang():
         username = payload.get("username")
         order_of_program = payload.get("order_of_program")
         result = _exec_clang(code)
+        print(result)
         _storage_code(code=code, username=username,
                      order_of_program=order_of_program, timestamp=str(time()))
         return jsonify({"result": result})
