@@ -12,7 +12,7 @@ NONE_LABEL = "OUT_OF_EDITOR"
 # area_data = List[[label: string, min_x: float, max_x: float, min_y: float, max_y: float]]
 # dimension = int
 # return type = Dic[{ time_stamp, gaze_point_x, gaze_point_y, label }]
-def correspond_position_to_area(gaze_data, area_data):
+def correspond_position_to_area(gaze_data, area_data, isSorted=True):
     def map_data_to_area(data):
         time_stamp, x, y = data
 
@@ -50,17 +50,17 @@ def correspond_position_to_area(gaze_data, area_data):
             'label': label
         }
 
+    if isSorted == True:
+        return sorted(list(map(map_data_to_area, gaze_data)), key=lambda item: float(item["time_stamp"]))
     return list(map(map_data_to_area, gaze_data))
 
 
 
 if __name__ == '__main__':
     gaze_data = import_csv(
-        join("shagamii",
-             "20191106-045128-20191106-045148"), get_formated_gaze_data)
-    area_data = import_csv(
-        join("layout", "shagamii"), get_formated_area_data
-    )[0]
+        join("positions", "4616019",
+             "assignment", "20191202-131210-20191202-131402"), get_formated_gaze_data)
+    area_data = get_formated_area_data()
     d = correspond_position_to_area(
         gaze_data=gaze_data,
         area_data=area_data
