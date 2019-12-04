@@ -1,6 +1,9 @@
+import math
+from os.path import join
+
+from get_formated_area_data import get_formated_area_data
 from get_formated_gaze_data import get_formated_gaze_data
 from import_csv import import_csv
-import math
 
 from utils.find_from_list import find_from_list
 
@@ -50,9 +53,16 @@ def correspond_position_to_area(gaze_data, area_data):
     return list(map(map_data_to_area, gaze_data))
 
 
+
 if __name__ == '__main__':
     gaze_data = import_csv(
-        "20191029-125128-20191029-125139", get_formated_gaze_data)
-    d = correspond_position_to_area(gaze_data, area_data=[[str(
-        i*1000), (i % 2) * .5, ((i % 2) + 1) * .5, (i)/10, (i+1)/10] for i in range(10)])
+        join("shagamii",
+             "20191106-045128-20191106-045148"), get_formated_gaze_data)
+    area_data = import_csv(
+        join("layout", "shagamii"), get_formated_area_data
+    )[0]
+    d = correspond_position_to_area(
+        gaze_data=gaze_data,
+        area_data=area_data
+    )
     print(d)

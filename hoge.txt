@@ -1,0 +1,15 @@
+{
+    'gaze_point_x': 0.21048153191804886, 'gaze_point_y': 0.20012680441141129, 'label': 'editorRow_8', 'time_stamp': '1572983504.712245'
+},
+{
+    'gaze_point_x': 0.2099553644657135,'gaze_point_y': 0.19516003876924515, 'label': 'editorRow_8', 'time_stamp': '1572983504.7233481'
+},
+{
+    'gaze_point_x': 0.19809376448392868, 'gaze_point_y': 0.17539553344249725, 'label': 'editorRow_7', 'time_stamp': '1572983504.734451'
+},
+{
+    'gaze_point_x': 0.2078520730137825, 'gaze_point_y': 0.1665184646844864, 'label': 'editorRow_6', 'time_stamp': '1572983504.745555'
+},
+{
+    'gaze_point_x': 0.20378350466489792, 'gaze_point_y': 0.13703147694468498, 'label': 'editorRow_5', 'time_stamp': '1572983504.756658'
+}
